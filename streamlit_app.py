@@ -48,7 +48,15 @@ with col2:
         st.error("Formato de data final inválido! Use dd/mm/aaaa")
         st.stop()
 
+### Importação de parâmetros para geração do arquivo ###
+
 # --- Unidades ---
+st.markdown(
+    """
+    <h2 style="text-align: center;">Identificação de Unidades</h2>
+    """,
+    unsafe_allow_html=True
+)
 unidades_input = st.text_area(
     "Lista de unidades (separadas por vírgula)",
     value="01,02,03"
@@ -58,7 +66,7 @@ lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 # --- Upload das classificações ---
 st.markdown(
     """
-    <h2 style="text-align: center;">Identificação de classificações</h2>
+    <h2 style="text-align: center;">Identificação de Classificações</h2>
     """,
     unsafe_allow_html=True
 )
