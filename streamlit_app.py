@@ -23,6 +23,23 @@ def gerar_template_csv(tipo):
     output.seek(0)
     return output.getvalue().encode("utf-8-sig")
 
+# --- Observações sobre o funcionamento ---
+st.markdown(
+    """
+    <div style='text-align: justify; font-size:16px; border:1px solid #ddd; border-radius:10px; padding:15px; background-color:#f9f9f9;'>
+        <h3 style='text-align:center; color:#333;'>📝 Observações sobre a função</h3>
+        <ul>
+            <li>O sistema gera documentos fictícios de entradas e saídas financeiras com base nos parâmetros definidos.</li>
+            <li>As unidades identificadas serão utilizadas de forma aleatória para cada documento.</li>
+            <li>As classificações podem ser importadas via arquivos CSV ou informadas manualmente e também serão utilizadas de forma aleatória.</li>
+            <li>O período de geração é determinado pelas datas inicial e final informadas.</li>
+            <li>As datas informadas identificam o período de vencimento dos documentos, a data de liquidação é aleatória.</li>
+        </ul>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 # --- Seção de período ---
 st.markdown(
     """
