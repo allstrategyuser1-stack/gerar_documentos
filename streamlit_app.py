@@ -76,6 +76,7 @@ st.markdown(
     """
     <h2 style="
         text-align: center;
+        font-size:25px;
         ">Identificação de Unidades
     </h2>
     """,
@@ -92,6 +93,7 @@ st.markdown(
     """
     <h2 style="
         text-align: center;
+        font-size:25px;
         ">Identificação de Classificações
     </h2>
     """,
