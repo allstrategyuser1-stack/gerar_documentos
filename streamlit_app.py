@@ -62,7 +62,7 @@ with col1:
         file_name="template_entradas.csv",
         mime="text/csv"
     )
-    arquivo_entradas = st.file_uploader("Importar lista de classificações de Entrada", type=["csv"])
+    arquivo_entradas = st.file_uploader("Anexe o arquivo preenchido abaixo para importar", type=["csv"])
 
 with col2:
     st.markdown("**Saída**")
@@ -72,7 +72,7 @@ with col2:
         file_name="template_saidas.csv",
         mime="text/csv"
     )
-    arquivo_saidas = st.file_uploader("Importar lista de classificações de Saída", type=["csv"])
+    arquivo_saidas = st.file_uploader("Anexe o arquivo preenchido abaixo para importar", type=["csv"])
 
 # --- Ler arquivos importados, se existirem ---
 entradas_codigos, saidas_codigos = [], []
