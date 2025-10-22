@@ -7,7 +7,7 @@ import pandas as pd
 import io
 
 st.set_page_config(page_title="Gerador de documentos fictícios (Fluxo)", layout="wide")
-st.title("Gerador de documentos fictícios (Fluxo)")
+st.title("Gerador de documentos fictícios (Fluxo) (v1.0.0)")
 
 # --- Função para gerar o template em memória (XLSX) ---
 def gerar_template_xlsx(tipo):
