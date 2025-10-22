@@ -9,7 +9,7 @@ import io
 st.set_page_config(page_title="Gerador de documentos fictícios (Fluxo)", layout="wide")
 st.title("Gerador de documentos fictícios (Fluxo)")
 
-# --- Função para gerar o template em XLSX em memória ---
+# --- Função para gerar o template em memória (XLSX) ---
 def gerar_template_xlsx(tipo):
     output = io.BytesIO()
     if tipo == "entrada":
@@ -22,8 +22,11 @@ def gerar_template_xlsx(tipo):
             "codigo": ["S001", "S002"],
             "nome": ["Exemplo de saída", "Pagamento de fornecedor"]
         })
-    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+
+    # Grava em XLSX (sem necessidade de instalar o xlsxwriter)
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="classificacoes")
+
     output.seek(0)
     return output.getvalue()
 
@@ -111,12 +114,15 @@ col_esq, col_vline, col_dir = st.columns([48, 1, 48])
 with col_esq:
     st.markdown("**Entradas**")
     st.download_button(
-        label="Clique para **Baixar modelo** (XLSX)",
+        label="Baixar modelo de Entradas (XLSX)",
         data=gerar_template_xlsx("entrada"),
         file_name="classificacoes_de_entrada.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-    arquivo_entradas = st.file_uploader("Importar lista de classificações de Entrada", type=["xlsx"])
+    arquivo_entradas = st.file_uploader(
+        "Importar lista de classificações de Entrada",
+        type=["xlsx"]
+    )
 
 # linha vertical
 vline_html = """
@@ -124,16 +130,18 @@ vline_html = """
 """
 col_vline.markdown(vline_html, unsafe_allow_html=True)
 
-# coluna direita: Saídas
 with col_dir:
     st.markdown("**Saídas**")
     st.download_button(
-        label="Clique para **Baixar modelo** (XLSX)",
+        label="Baixar modelo de Saídas (XLSX)",
         data=gerar_template_xlsx("saida"),
         file_name="classificacoes_de_saida.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-    arquivo_saidas = st.file_uploader("Importar lista de classificações de Saída", type=["xlsx"])
+    arquivo_saidas = st.file_uploader(
+        "Importar lista de classificações de Saída",
+        type=["xlsx"]
+    )
 
 # --- Leitura dos arquivos importados ---
 entradas_codigos, saidas_codigos = [], []
