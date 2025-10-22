@@ -9,19 +9,23 @@ import io
 st.set_page_config(page_title="Gerador de documentos fictícios (Fluxo)", layout="wide")
 st.title("Gerador de documentos fictícios (Fluxo)")
 
-# --- Função para gerar o template em memória ---
-def gerar_template_csv(tipo):
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow(["codigo", "nome"])
+# --- Função para gerar o template em XLSX em memória ---
+def gerar_template_xlsx(tipo):
+    output = io.BytesIO()
     if tipo == "entrada":
-        writer.writerow(["E001", "Exemplo de entrada"])
-        writer.writerow(["E002", "Venda de produto"])
+        df = pd.DataFrame({
+            "codigo": ["E001", "E002"],
+            "nome": ["Exemplo de entrada", "Venda de produto"]
+        })
     else:
-        writer.writerow(["S001", "Exemplo de saída"])
-        writer.writerow(["S002", "Pagamento de fornecedor"])
+        df = pd.DataFrame({
+            "codigo": ["S001", "S002"],
+            "nome": ["Exemplo de saída", "Pagamento de fornecedor"]
+        })
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+        df.to_excel(writer, index=False, sheet_name="classificacoes")
     output.seek(0)
-    return output.getvalue().encode("utf-8-sig")
+    return output.getvalue()
 
 # --- Observações sobre o funcionamento ---
 st.markdown(
@@ -107,44 +111,37 @@ col_esq, col_vline, col_dir = st.columns([48, 1, 48])
 with col_esq:
     st.markdown("**Entradas**")
     st.download_button(
-        label="Clique para **Baixar modelo** (CSV)",
-        data=gerar_template_csv("entrada"),
-        file_name="classificacoes_de_entrada.csv",
-        mime="text/csv"
+        label="Clique para **Baixar modelo** (XLSX)",
+        data=gerar_template_xlsx("entrada"),
+        file_name="classificacoes_de_entrada.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-    arquivo_entradas = st.file_uploader("Importar lista de classificações de Entrada", type=["csv"])
+    arquivo_entradas = st.file_uploader("Importar lista de classificações de Entrada", type=["xlsx"])
 
-# coluna central: linha vertical
-# ajuste a altura (px) conforme necessário para cobrir a altura do conteúdo
+# linha vertical
 vline_html = """
-    <div style="
-        border-left: 2px solid #CCCCCC;
-        height: 240px;
-        margin-left: 50%;
-    ">
-</div>
+<div style="border-left:2px solid #CCC; height:240px; margin-left:50%;"></div>
 """
-# Exibe a linha (vazia na coluna central)
 col_vline.markdown(vline_html, unsafe_allow_html=True)
 
 # coluna direita: Saídas
 with col_dir:
     st.markdown("**Saídas**")
     st.download_button(
-        label="Clique para **Baixar modelo** (CSV)",
-        data=gerar_template_csv("saida"),
-        file_name="classificacoes_de_saida.csv",
-        mime="text/csv"
+        label="Clique para **Baixar modelo** (XLSX)",
+        data=gerar_template_xlsx("saida"),
+        file_name="classificacoes_de_saida.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-    arquivo_saidas = st.file_uploader("Importar lista de classificações de Saída", type=["csv"])
+    arquivo_saidas = st.file_uploader("Importar lista de classificações de Saída", type=["xlsx"])
 
-# --- Ler arquivos importados, se existirem ---
+# --- Leitura dos arquivos importados ---
 entradas_codigos, saidas_codigos = [], []
 entradas_nomes, saidas_nomes = [], []
 
 if arquivo_entradas is not None:
     try:
-        df_entradas = pd.read_csv(arquivo_entradas)
+        df_entradas = pd.read_excel(arquivo_entradas)
         if "codigo" in df_entradas.columns and "nome" in df_entradas.columns:
             entradas_codigos = df_entradas["codigo"].dropna().astype(str).tolist()
             entradas_nomes = df_entradas["nome"].dropna().astype(str).tolist()
@@ -157,7 +154,7 @@ if arquivo_entradas is not None:
 
 if arquivo_saidas is not None:
     try:
-        df_saidas = pd.read_csv(arquivo_saidas)
+        df_saidas = pd.read_excel(arquivo_saidas)
         if "codigo" in df_saidas.columns and "nome" in df_saidas.columns:
             saidas_codigos = df_saidas["codigo"].dropna().astype(str).tolist()
             saidas_nomes = df_saidas["nome"].dropna().astype(str).tolist()
