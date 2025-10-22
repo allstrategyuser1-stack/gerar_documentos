@@ -51,25 +51,25 @@ unidades_input = st.text_area(
 lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 
 # --- Upload das classificações ---
-st.subheader("Identificação de classificações")
+st.subheader("Classificações de Entrada e Saída")
 
 col1, col2 = st.columns(2)
 with col1:
-    st.markdown("**Entradas**")
+    st.markdown("**Template de Entrada**")
     st.download_button(
-        label="Clique aqui para **Baixar modelo** (CSV)",
+        label="📥 Baixar modelo de Entrada (CSV)",
         data=gerar_template_csv("entrada"),
-        file_name="classificacoes_de_entrada.csv",
+        file_name="template_entradas.csv",
         mime="text/csv"
     )
     arquivo_entradas = st.file_uploader("Importar lista de classificações de Entrada", type=["csv"])
 
 with col2:
-    st.markdown("**Saídas**")
+    st.markdown("**Template de Saída**")
     st.download_button(
-        label="Clique aqui para **Baixar modelo** (CSV)",
+        label="📥 Baixar modelo de Saída (CSV)",
         data=gerar_template_csv("saida"),
-        file_name="classificacoes_de_saída.csv",
+        file_name="template_saidas.csv",
         mime="text/csv"
     )
     arquivo_saidas = st.file_uploader("Importar lista de classificações de Saída", type=["csv"])
@@ -85,10 +85,7 @@ if arquivo_entradas is not None:
             entradas_codigos = df_entradas["codigo"].dropna().astype(str).tolist()
             entradas_nomes = df_entradas["nome"].dropna().astype(str).tolist()
             st.success(f"{len(entradas_codigos)} classificações de Entrada importadas com sucesso!")
-
-            # 🔹 Exibir com cabeçalho formatado
-            df_entradas_exibir = df_entradas.rename(columns={"codigo": "Código", "nome": "Nome"})  # ⬅️ alterado
-            st.dataframe(df_entradas_exibir, use_container_width=True)  # ⬅️ alterado
+            st.dataframe(df_entradas, use_container_width=True)
         else:
             st.error("Arquivo de entradas deve conter as colunas 'codigo' e 'nome'.")
     except Exception as e:
@@ -101,10 +98,7 @@ if arquivo_saidas is not None:
             saidas_codigos = df_saidas["codigo"].dropna().astype(str).tolist()
             saidas_nomes = df_saidas["nome"].dropna().astype(str).tolist()
             st.success(f"{len(saidas_codigos)} classificações de Saída importadas com sucesso!")
-
-            # 🔹 Exibir com cabeçalho formatado
-            df_saidas_exibir = df_saidas.rename(columns={"codigo": "Código", "nome": "Nome"})  # ⬅️ alterado
-            st.dataframe(df_saidas_exibir, use_container_width=True)  # ⬅️ alterado
+            st.dataframe(df_saidas, use_container_width=True)
         else:
             st.error("Arquivo de saídas deve conter as colunas 'codigo' e 'nome'.")
     except Exception as e:
