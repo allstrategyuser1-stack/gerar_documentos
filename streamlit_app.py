@@ -53,7 +53,7 @@ lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 # --- Upload das classificações ---
 st.subheader("Identificação de classificações")
 
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([1, 1])  # duas colunas de mesmo tamanho
 
 with col1:
     st.markdown("**Entrada**")
@@ -63,11 +63,23 @@ with col1:
         file_name="template_entradas.csv",
         mime="text/csv"
     )
-
-    # Linha divisória
-    st.markdown("<hr style='border:1px solid #ccc;'>", unsafe_allow_html=True)
-
     arquivo_entradas = st.file_uploader("Importar lista de classificações de Entrada", type=["csv"])
+
+# 🔹 Linha vertical de divisão entre colunas
+st.markdown(
+    """
+    <style>
+    div[data-testid="column"]:nth-child(1) {
+        border-right: 1px solid #CCCCCC;
+        padding-right: 20px;
+    }
+    div[data-testid="column"]:nth-child(2) {
+        padding-left: 20px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 with col2:
     st.markdown("**Saída**")
@@ -77,10 +89,6 @@ with col2:
         file_name="template_saidas.csv",
         mime="text/csv"
     )
-
-    # Linha divisória
-    st.markdown("<hr style='border:1px solid #ccc;'>", unsafe_allow_html=True)
-
     arquivo_saidas = st.file_uploader("Importar lista de classificações de Saída", type=["csv"])
 
 # --- Ler arquivos importados, se existirem ---
