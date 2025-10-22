@@ -53,40 +53,43 @@ lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 # --- Upload das classificações ---
 st.subheader("Identificação de classificações")
 
-col1, col2 = st.columns([1, 1])  # duas colunas de mesmo tamanho
+# --- Upload das classificações com linha vertical entre colunas ---
+st.subheader("Identificação de classificações")
 
-with col1:
-    st.markdown("**Entrada**")
+# três colunas: esquerda (Entrada), coluna estreita (linha), direita (Saída)
+col_esq, col_vline, col_dir = st.columns([48, 1, 48])
+
+# coluna esquerda: Entradas
+with col_esq:
+    st.markdown("**Entradas**")
     st.download_button(
-        label="Baixar modelo (CSV)",
+        label="Clique para **Baixar modelo** (CSV)",
         data=gerar_template_csv("entrada"),
-        file_name="template_entradas.csv",
+        file_name="classificacoes_de_entrada.csv",
         mime="text/csv"
     )
     arquivo_entradas = st.file_uploader("Importar lista de classificações de Entrada", type=["csv"])
 
-# 🔹 Linha vertical de divisão entre colunas
-st.markdown(
-    """
-    <style>
-    div[data-testid="column"]:nth-child(1) {
-        border-right: 1px solid #CCCCCC;
-        padding-right: 20px;
-    }
-    div[data-testid="column"]:nth-child(2) {
-        padding-left: 20px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# coluna central: linha vertical
+# ajuste a altura (px) conforme necessário para cobrir a altura do conteúdo
+vline_html = """
+<div style="
+    border-left: 2px solid #CCCCCC;
+    height: 240px;
+    margin-left: 50%;
+">
+</div>
+"""
+# Exibe a linha (vazia na coluna central)
+col_vline.markdown(vline_html, unsafe_allow_html=True)
 
-with col2:
-    st.markdown("**Saída**")
+# coluna direita: Saídas
+with col_dir:
+    st.markdown("**Saídas**")
     st.download_button(
-        label="Baixar modelo (CSV)",
+        label="Clique para **Baixar modelo** (CSV)",
         data=gerar_template_csv("saida"),
-        file_name="template_saidas.csv",
+        file_name="classificacoes_de_saida.csv",
         mime="text/csv"
     )
     arquivo_saidas = st.file_uploader("Importar lista de classificações de Saída", type=["csv"])
