@@ -31,9 +31,9 @@ st.markdown(
         <ul>
             <li>A função gera documentos fictícios de entradas e saídas financeiras com base nos parâmetros definidos.</li>
             <li>O campo de unidade deve ser preenchido com os códigos cadastrados no Fluxo e as unidades identificadas serão utilizadas de forma aleatória para cada documento.</li>
-            <li>O campo de classificações deve ser preenchido com os **códigos externos** cadastrados no Fluxo e as classificações podem ser importadas via arquivos CSV ou informadas manualmente e também serão utilizadas de forma aleatória.</li>
+            <li>O campo de classificações deve ser preenchido com os códigos <b>externos</b> cadastrados no Fluxo e as classificações podem ser importadas via arquivos CSV ou informadas manualmente e também serão utilizadas de forma aleatória.</li>
             <li>O período de geração é determinado pelas datas inicial e final informadas.</li>
-            <li>As datas informadas identificam o período de **vencimento** dos documentos, a data de liquidação é aleatória e alguns documentos terão a data de liquidação em branco para simular atrasados ou previstos.</li>
+            <li>As datas informadas identificam o período de <b>vencimento</b> dos documentos, a data de liquidação é aleatória e alguns documentos terão a data de liquidação em branco para simular atrasados ou previstos.</li>
         </ul>
     </div>
     """,
