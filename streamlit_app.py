@@ -43,7 +43,7 @@ st.markdown(
 # --- Seção de período ---
 st.markdown(
     """
-    <h2 style="text-align: center;">Período dos registros (Vencimento)</h2>
+    <h2 style="text-align: center; font-size:18px; ">Período dos registros (Vencimento)</h2>
     """,
     unsafe_allow_html=True
 )
