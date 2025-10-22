@@ -114,7 +114,7 @@ col_esq, col_vline, col_dir = st.columns([48, 1, 48])
 with col_esq:
     st.markdown("**Entradas**")
     st.download_button(
-        label="Baixar modelo de Entradas (XLSX)",
+        label="Baixar modelo (XLSX)",
         data=gerar_template_xlsx("entrada"),
         file_name="classificacoes_de_entrada.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -133,7 +133,7 @@ col_vline.markdown(vline_html, unsafe_allow_html=True)
 with col_dir:
     st.markdown("**Saídas**")
     st.download_button(
-        label="Baixar modelo de Saídas (XLSX)",
+        label="Baixar modelo (XLSX)",
         data=gerar_template_xlsx("saida"),
         file_name="classificacoes_de_saida.xlsx",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
