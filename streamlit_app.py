@@ -26,14 +26,14 @@ def gerar_template_csv(tipo):
 # --- Observações sobre o funcionamento ---
 st.markdown(
     """
-    <div style='text-align: justify; font-size:16px; border:1px solid #ddd; border-radius:10px; padding:15px; background-color:#f9f9f9;'>
-        <h3 style='text-align:center; color:#333;'>📝 Observações sobre a função</h3>
+    <div style='text-align: justify; font-size:20px; border:1px solid #ddd; border-radius:10px; padding:15px; background-color:#f9f9f9;'>
+        <h3 style='text-align:center; color:#333;'>Observações sobre a função</h3>
         <ul>
             <li>A função gera documentos fictícios de entradas e saídas financeiras com base nos parâmetros definidos.</li>
             <li>O campo de unidade deve ser preenchido com os códigos cadastrados no Fluxo e as unidades identificadas serão utilizadas de forma aleatória para cada documento.</li>
             <li>O campo de classificações deve ser preenchido com os códigos externos cadastrados no Fluxo e as classificações podem ser importadas via arquivos CSV ou informadas manualmente e também serão utilizadas de forma aleatória.</li>
             <li>O período de geração é determinado pelas datas inicial e final informadas.</li>
-            <li>As datas informadas identificam o período de vencimento dos documentos, a data de liquidação é aleatória.</li>
+            <li>As datas informadas identificam o período de vencimento dos documentos, a data de liquidação é aleatória e alguns documentos terão a data de liquidação em branco para simular atrasados ou previstos.</li>
         </ul>
     </div>
     """,
@@ -43,7 +43,7 @@ st.markdown(
 # --- Seção de período ---
 st.markdown(
     """
-    <h2 style="text-align: center;">Período dos registros</h2>
+    <h2 style="text-align: center;">Período dos registros (Vencimento)</h2>
     """,
     unsafe_allow_html=True
 )
