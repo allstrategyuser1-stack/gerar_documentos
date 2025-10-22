@@ -54,24 +54,33 @@ lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 st.subheader("Identificação de classificações")
 
 col1, col2 = st.columns(2)
+
 with col1:
     st.markdown("**Entrada**")
     st.download_button(
-        label="Clique para baixar o modelo (CSV)",
+        label="Baixar modelo (CSV)",
         data=gerar_template_csv("entrada"),
         file_name="template_entradas.csv",
         mime="text/csv"
     )
+
+    # Linha divisória
+    st.markdown("<hr style='border:1px solid #ccc;'>", unsafe_allow_html=True)
+
     arquivo_entradas = st.file_uploader("Importar lista de classificações de Entrada", type=["csv"])
 
 with col2:
     st.markdown("**Saída**")
     st.download_button(
-        label="Clique para baixar o modelo (CSV)",
+        label="Baixar modelo (CSV)",
         data=gerar_template_csv("saida"),
         file_name="template_saidas.csv",
         mime="text/csv"
     )
+
+    # Linha divisória
+    st.markdown("<hr style='border:1px solid #ccc;'>", unsafe_allow_html=True)
+
     arquivo_saidas = st.file_uploader("Importar lista de classificações de Saída", type=["csv"])
 
 # --- Ler arquivos importados, se existirem ---
