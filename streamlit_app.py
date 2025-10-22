@@ -52,12 +52,13 @@ lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 
 # --- Upload das classificações ---
 st.subheader("Identificação de classificações")
-    st.markdown(    
-        <div style="
-            margin-left: 50%;
-        ">
+st.markdown(
+    """
+        <div style="margin-left: 50%;">
         </div>
-    )
+    """,
+    unsafe_allow_html=True
+)
 
 # três colunas: esquerda (Entrada), coluna estreita (linha), direita (Saída)
 col_esq, col_vline, col_dir = st.columns([48, 1, 48])
