@@ -54,8 +54,7 @@ lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 st.subheader("Identificação de classificações")
 st.markdown(
     """
-        <div style="margin-left: 50%;">
-        </div>
+    <h2 style="text-align: center;">Identificação de classificações</h2>
     """,
     unsafe_allow_html=True
 )
@@ -81,7 +80,6 @@ vline_html = """
     border-left: 2px solid #CCCCCC;
     height: 240px;
     margin-left: 50%;
-    margin-right: 50%;
 ">
 </div>
 """
