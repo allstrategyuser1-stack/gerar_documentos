@@ -74,7 +74,10 @@ with col2:
 # --- Unidades ---
 st.markdown(
     """
-    <h2 style="text-align: center;">Identificação de Unidades</h2>
+    <h2 style="
+        text-align: center;
+        ">Identificação de Unidades
+    </h2>
     """,
     unsafe_allow_html=True
 )
@@ -87,7 +90,10 @@ lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 # --- Upload das classificações ---
 st.markdown(
     """
-    <h2 style="text-align: center;">Identificação de Classificações</h2>
+    <h2 style="
+        text-align: center;
+        ">Identificação de Classificações
+    </h2>
     """,
     unsafe_allow_html=True
 )
@@ -109,11 +115,11 @@ with col_esq:
 # coluna central: linha vertical
 # ajuste a altura (px) conforme necessário para cobrir a altura do conteúdo
 vline_html = """
-<div style="
-    border-left: 2px solid #CCCCCC;
-    height: 240px;
-    margin-left: 50%;
-">
+    <div style="
+        border-left: 2px solid #CCCCCC;
+        height: 240px;
+        margin-left: 50%;
+    ">
 </div>
 """
 # Exibe a linha (vazia na coluna central)
