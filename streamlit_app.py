@@ -51,13 +51,13 @@ unidades_input = st.text_area(
 lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 
 # --- Upload das classificações ---
-st.subheader("Classificações de Entrada e Saída")
+st.subheader("Identificação de classificações")
 
 col1, col2 = st.columns(2)
 with col1:
-    st.markdown("**Template de Entrada**")
+    st.markdown("**Entrada**")
     st.download_button(
-        label="📥 Baixar modelo de Entrada (CSV)",
+        label="Clique para baixar o modelo (CSV)",
         data=gerar_template_csv("entrada"),
         file_name="template_entradas.csv",
         mime="text/csv"
@@ -65,9 +65,9 @@ with col1:
     arquivo_entradas = st.file_uploader("Importar lista de classificações de Entrada", type=["csv"])
 
 with col2:
-    st.markdown("**Template de Saída**")
+    st.markdown("**Saída**")
     st.download_button(
-        label="📥 Baixar modelo de Saída (CSV)",
+        label="Clique para baixar o modelo (CSV)",
         data=gerar_template_csv("saida"),
         file_name="template_saidas.csv",
         mime="text/csv"
