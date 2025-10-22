@@ -24,7 +24,12 @@ def gerar_template_csv(tipo):
     return output.getvalue().encode("utf-8-sig")
 
 # --- Seção de período ---
-st.subheader("Período dos registros")
+st.markdown(
+    """
+    <h2 style="text-align: center;">Período dos registros</h2>
+    """,
+    unsafe_allow_html=True
+)
 
 col1, col2 = st.columns(2)
 with col1:
