@@ -81,6 +81,7 @@ vline_html = """
     border-left: 2px solid #CCCCCC;
     height: 240px;
     margin-left: 50%;
+    margin-right: 50%;
 ">
 </div>
 """
