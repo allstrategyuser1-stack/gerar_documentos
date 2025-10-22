@@ -257,4 +257,4 @@ if st.button("Gerar CSV"):
         writer.writerows(registros)
 
     st.success(f"CSV gerado com {len(registros)} registros!")
-    st.download_button("💾 Download do arquivo gerado", open(csv_file, "rb"), file_name="documentos.csv")
+    st.download_button("Download do arquivo gerado", open(csv_file, "rb"), file_name="documentos.csv")
