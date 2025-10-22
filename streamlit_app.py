@@ -51,7 +51,6 @@ unidades_input = st.text_area(
 lista_unidades = [u.strip() for u in unidades_input.split(",") if u.strip()]
 
 # --- Upload das classificações ---
-st.subheader("Identificação de classificações")
 st.markdown(
     """
     <h2 style="text-align: center;">Identificação de classificações</h2>
