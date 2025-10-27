@@ -145,12 +145,13 @@ def voltar_step():
         st.session_state.step -= 1
 
 def botoes_step(preenchido=True, label_proximo="Próximo ➡"):
+    step = st.session_state.step  # pega o número atual da etapa
     col1, col2 = st.columns([1, 1])
     with col1:
-        st.button("⬅ Voltar", on_click=voltar_step)
+        st.button("⬅ Voltar", on_click=voltar_step, key=f"voltar_{step}")
     with col2:
         if preenchido:
-            st.button(label_proximo, on_click=avancar_step)
+            st.button(label_proximo, on_click=avancar_step, key=f"proximo_{step}")
 
 # -------------------------------------------------
 # 🧾 BOTÃO DE RESET GLOBAL
