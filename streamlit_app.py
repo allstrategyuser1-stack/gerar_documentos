@@ -56,7 +56,7 @@ TEMPLATES = {
     "tipos_doc": ("tipos_doc", ["NF", "REC"], ["Nota Fiscal", "Recibo"])
 }
 
-# Função para formatar valores no estilo brasileiro
+# Função para formatar valores em Real brasileiro
 def formatar_brl(valor):
     return f"R$ {valor:,.2f}".replace(',', 'v').replace('.', ',').replace('v', '.')
 
@@ -149,10 +149,6 @@ def gerar_registros_csv(n):
         "centro_custo": [escolha(st.session_state.lista_cc) for _ in range(n)],
         "tipo_doc": [escolha(st.session_state.lista_tipos) for _ in range(n)]
     })
-
-    # Formatar valores em BRL para exibição/CSV
-    registros['valor'] = registros['valor'].apply(formatar_brl)
-
     return registros
 
 # -------------------------------------------------
@@ -166,7 +162,7 @@ def voltar_step():
         st.session_state.step -= 1
 
 def botoes_step(preenchido=True, label_proximo="Próximo ➡"):
-    step = st.session_state.step  # pega o número atual da etapa
+    step = st.session_state.step
     col1, col2 = st.columns([1, 1])
     with col1:
         st.button("⬅ Voltar", on_click=voltar_step, key=f"voltar_{step}")
@@ -188,10 +184,7 @@ if st.button("🔄 Limpar dados"):
 with st.expander("ℹ️ Observações da função", expanded=False):
     st.info("""
         - Gera um arquivo com documentos fictícios de entradas e saídas financeiras baseados nos parâmetros informados.
-            - Os parâmetros devem ser preenchidos/importados com os códigos cadastrados no Fluxo e serão utilizados de forma aleatória para cada documento
-        - O período de geração é determinado pelas datas inicial e final informadas.
-            - As datas informadas identificam o período de <b>vencimento</b> dos documentos
-            - A data de liquidação é aleatória e alguns documentos terão a data de liquidação em branco para simular atrasados ou previstos.
+        - O período define o vencimento e a liquidação é aleatória.
         - O limite máximo atual de documentos por arquivo é de 10.000.
     """)
 
@@ -201,7 +194,7 @@ with st.expander("ℹ️ Observações da função", expanded=False):
 step = st.session_state.step
 st.progress((step + 1) / 7)
 
-# Passo 0 - Período
+# Passos do fluxo
 if step == 0:
     st.markdown("### 📅 Selecionar Período")
     data_inicio_str = st.text_input("Data inicial", value=st.session_state.data_inicio.strftime("%d/%m/%Y"))
@@ -231,34 +224,28 @@ if step == 0:
             }) or avancar_step()
         )
 
-# Passo 1 - Unidades
 elif step == 1:
     preenchido = atualizar_lista("Unidades", st.session_state.lista_unidades, "unidades", "unidades")
     botoes_step(preenchido, "Próximo: Classificações ➡")
 
-# Passo 2 - Classificações
 elif step == 2:
     st.markdown("<h2>Classificações financeiras</h2>", unsafe_allow_html=True)
     entradas_ok = atualizar_lista("Entradas", st.session_state.entradas_codigos, "entrada", "entradas")
     saidas_ok = atualizar_lista("Saídas", st.session_state.saidas_codigos, "saida", "saidas")
     botoes_step(entradas_ok and saidas_ok, "Próximo: Tesouraria ➡")
 
-# Passo 3 - Tesouraria
 elif step == 3:
     preenchido = atualizar_lista("Tesouraria", st.session_state.lista_tesouraria, "tesouraria", "tesouraria")
     botoes_step(preenchido, "Próximo: Centro de Custo ➡")
 
-# Passo 4 - Centro de Custo
 elif step == 4:
     preenchido = atualizar_lista("Centro de Custo", st.session_state.lista_cc, "centro_custo", "cc")
     botoes_step(preenchido, "Próximo: Tipos de Documento ➡")
 
-# Passo 5 - Tipos de Documento
 elif step == 5:
     preenchido = atualizar_lista("Tipos de Documento", st.session_state.lista_tipos, "tipos_doc", "tipos_doc")
     botoes_step(preenchido, "Próximo: Gerar CSV ➡")
 
-# Passo 6 - Geração CSV
 elif step == 6:
     st.markdown("### 💾 Gerar CSV com dados")
     num_registros = st.number_input("Número de registros", min_value=10, max_value=10000, value=100)
@@ -271,32 +258,38 @@ elif step == 6:
     botoes_step(preenchido=True, label_proximo="⬅ Voltar")
 
     if st.session_state.csv_gerado:
-        df = st.session_state.registros_gerados
-        # Converter coluna 'valor' para formato brasileiro (sem R$)
-        df_csv = df.copy()
-        df_csv['valor'] = df_csv['valor'].apply(
-        lambda v: f"{v:,.2f}".replace(',', 'v').replace('.', ',').replace('v', '.')
-        )
+        df = st.session_state.registros_gerados.copy()
 
-        # Gerar CSV no formato UTF-8 com separador padrão (,)
+        # Cria coluna numérica auxiliar
+        df["valor_num"] = df["valor"].astype(float)
+
+        # Formata apenas para o CSV (sem R$, com vírgula decimal e ponto milhar)
+        df_csv = df.copy()
+        df_csv["valor"] = df_csv["valor_num"].apply(
+            lambda v: f"{v:,.2f}".replace(",", "v").replace(".", ",").replace("v", ".")
+        )
+        df_csv = df_csv.drop(columns=["valor_num"])
+
+        # Gera CSV com separador ;
         csv_buffer = io.StringIO()
-        df_csv.to_csv(csv_buffer, index=False)
+        df_csv.to_csv(csv_buffer, index=False, sep=";", encoding="utf-8-sig")
 
         st.download_button(
-        "📥 Download CSV",
-        data=csv_buffer.getvalue(),
-        file_name="documentos.csv",
-        mime="text/csv"
+            "📥 Download CSV",
+            data=csv_buffer.getvalue(),
+            file_name="documentos.csv",
+            mime="text/csv"
         )
 
+        # Exibe resumo formatado
         st.subheader("📊 Resumo de Registros")
-        entradas = df[df['natureza'] == 'E']
-        saidas = df[df['natureza'] == 'S']
+        entradas = df[df["natureza"] == "E"]
+        saidas = df[df["natureza"] == "S"]
 
         col1, col2 = st.columns(2)
         with col1:
             st.metric("Entradas", entradas.shape[0])
-            st.metric("Valor total Entradas", formatar_brl(entradas['valor'].apply(lambda x: float(x.replace('R$ ','').replace('.','').replace(',','.'))).sum()))
+            st.metric("Valor total Entradas", formatar_brl(entradas["valor_num"].sum()))
         with col2:
             st.metric("Saídas", saidas.shape[0])
-            st.metric("Valor total Saídas", formatar_brl(saidas['valor'].apply(lambda x: float(x.replace('R$ ','').replace('.','').replace(',','.'))).sum()))
+            st.metric("Valor total Saídas", formatar_brl(saidas["valor_num"].sum()))
