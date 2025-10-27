@@ -56,6 +56,10 @@ TEMPLATES = {
     "tipos_doc": ("tipos_doc", ["NF", "REC"], ["Nota Fiscal", "Recibo"])
 }
 
+# Função para formatar valores no estilo brasileiro
+def formatar_brl(valor):
+    return f"R$ {valor:,.2f}".replace(',', 'v').replace('.', ',').replace('v', '.')
+
 def gerar_template_xlsx(tipo):
     output = io.BytesIO()
     sheet, codigos, nomes = TEMPLATES.get(tipo, ("Sheet1", [], []))
@@ -145,6 +149,9 @@ def gerar_registros_csv(n):
         "centro_custo": [escolha(st.session_state.lista_cc) for _ in range(n)],
         "tipo_doc": [escolha(st.session_state.lista_tipos) for _ in range(n)]
     })
+
+    # Formatar valores em BRL para exibição/CSV
+    registros['valor'] = registros['valor'].apply(formatar_brl)
 
     return registros
 
@@ -277,7 +284,7 @@ elif step == 6:
         col1, col2 = st.columns(2)
         with col1:
             st.metric("Entradas", entradas.shape[0])
-            st.metric("Valor total Entradas", f"R$ {entradas['valor'].sum():,.2f}")
+            st.metric("Valor total Entradas", formatar_brl(entradas['valor'].apply(lambda x: float(x.replace('R$ ','').replace('.','').replace(',','.'))).sum()))
         with col2:
             st.metric("Saídas", saidas.shape[0])
-            st.metric("Valor total Saídas", f"R$ {saidas['valor'].sum():,.2f}")
+            st.metric("Valor total Saídas", formatar_brl(saidas['valor'].apply(lambda x: float(x.replace('R$ ','').replace('.','').replace(',','.'))).sum()))
