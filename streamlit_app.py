@@ -98,22 +98,32 @@ def atualizar_lista(nome, lista_padrao, tipo_arquivo, key):
     return bool(lista)
 
 def gerar_registros_csv(n):
-    data_inicio, data_fim = st.session_state.data_inicio, st.session_state.data_fim
+    # Datas de início e fim como date
+    data_inicio = st.session_state.data_inicio.date()
+    data_fim = st.session_state.data_fim.date()
     dias_range = (data_fim - data_inicio).days
 
+    # Natureza e valores
     tipos = [random.choice(["E", "S"]) for _ in range(n)]
     valores = [round(random.uniform(1, 101000), 2) for _ in range(n)]
     vencimentos = [data_inicio + timedelta(days=random.randint(0, dias_range)) for _ in range(n)]
 
-    def pagamento_aleatorio(v):
+    # Função de pagamento aleatório
+    def pagamento_aleatorio(v: datetime.date):
         if random.random() < 0.5:
             p = v + timedelta(days=random.randint(-5, 5))
-            return max(min(p, datetime.today()), data_inicio)
+            # Limita entre data_inicio e hoje
+            hoje = datetime.today().date()
+            p = max(min(p, hoje), data_inicio)
+            return p
         return None
 
     pagamentos = [pagamento_aleatorio(v) for v in vencimentos]
-    def escolha(lista): return random.choice(lista) if lista else ""
 
+    def escolha(lista): 
+        return random.choice(lista) if lista else ""
+
+    # Montagem do DataFrame
     registros = pd.DataFrame({
         "id": range(1, n+1),
         "natureza": tipos,
@@ -132,6 +142,7 @@ def gerar_registros_csv(n):
         "centro_custo": [escolha(st.session_state.lista_cc) for _ in range(n)],
         "tipo_doc": [escolha(st.session_state.lista_tipos) for _ in range(n)]
     })
+
     return registros
 
 # -------------------------------------------------
