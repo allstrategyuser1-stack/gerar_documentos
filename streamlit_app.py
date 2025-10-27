@@ -98,9 +98,14 @@ def atualizar_lista(nome, lista_padrao, tipo_arquivo, key):
     return bool(lista)
 
 def gerar_registros_csv(n):
-    # Datas de início e fim como date
-    data_inicio = st.session_state.data_inicio.date()
-    data_fim = st.session_state.data_fim.date()
+    # Garante que data_inicio e data_fim sejam date
+    data_inicio = st.session_state.data_inicio
+    data_fim = st.session_state.data_fim
+    if isinstance(data_inicio, datetime):
+        data_inicio = data_inicio.date()
+    if isinstance(data_fim, datetime):
+        data_fim = data_fim.date()
+
     dias_range = (data_fim - data_inicio).days
 
     # Natureza e valores
@@ -112,7 +117,6 @@ def gerar_registros_csv(n):
     def pagamento_aleatorio(v: datetime.date):
         if random.random() < 0.5:
             p = v + timedelta(days=random.randint(-5, 5))
-            # Limita entre data_inicio e hoje
             hoje = datetime.today().date()
             p = max(min(p, hoje), data_inicio)
             return p
@@ -123,7 +127,6 @@ def gerar_registros_csv(n):
     def escolha(lista): 
         return random.choice(lista) if lista else ""
 
-    # Montagem do DataFrame
     registros = pd.DataFrame({
         "id": range(1, n+1),
         "natureza": tipos,
