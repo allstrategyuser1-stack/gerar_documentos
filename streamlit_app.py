@@ -272,10 +272,22 @@ elif step == 6:
 
     if st.session_state.csv_gerado:
         df = st.session_state.registros_gerados
+        # Converter coluna 'valor' para formato brasileiro (sem R$)
+        df_csv = df.copy()
+        df_csv['valor'] = df_csv['valor'].apply(
+        lambda v: f"{v:,.2f}".replace(',', 'v').replace('.', ',').replace('v', '.')
+        )
+
+        # Gerar CSV no formato UTF-8 com separador padrão (,)
         csv_buffer = io.StringIO()
-        df.to_csv(csv_buffer, index=False)
-        st.download_button("📥 Download CSV", data=csv_buffer.getvalue(),
-                           file_name="documentos.csv", mime="text/csv")
+        df_csv.to_csv(csv_buffer, index=False)
+
+        st.download_button(
+        "📥 Download CSV",
+        data=csv_buffer.getvalue(),
+        file_name="documentos.csv",
+        mime="text/csv"
+        )
 
         st.subheader("📊 Resumo de Registros")
         entradas = df[df['natureza'] == 'E']
