@@ -131,24 +131,60 @@ def gerar_registros_csv(n):
     def escolha(lista): 
         return random.choice(lista) if lista else ""
 
+    # Gera dt_inclusao e dt_emissao (10 a 30 dias antes do vencimento)
+    dt_inclusao = []
+    dt_emissao = []
+    for v in vencimentos:
+        dias_antes = random.randint(10, 30)
+        data_base = v - timedelta(days=dias_antes)
+        if data_base < data_inicio:
+            data_base = data_inicio
+        dt_inclusao.append(data_base.strftime("%d/%m/%Y"))
+        dt_emissao.append(data_base.strftime("%d/%m/%Y"))
+
+    # Gera descrições e históricos detalhados
+    descricoes = [
+        random.choice(st.session_state.entradas_codigos if t == "E" else st.session_state.saidas_codigos)
+        for t in tipos
+    ]
+
+    historicos = []
+    for i in range(n):
+        tipo = tipos[i]
+        desc = descricoes[i]
+        tipo_doc = escolha(st.session_state.lista_tipos)
+        if tipo == "E":
+            historico = f"Recebimento referente ao documento {tipo_doc} código {desc}, lançamento automático de entrada."
+        else:
+            historico = f"Pagamento referente ao documento {tipo_doc} código {desc}, lançamento automático de saída."
+        historicos.append(historico)
+
     registros = pd.DataFrame({
-        "id": range(1, n+1),
+        "documento": range(1, n + 1),
         "natureza": tipos,
         "valor": valores,
         "unidade": [escolha(st.session_state.lista_unidades) for _ in range(n)],
+        "centro_custo": [escolha(st.session_state.lista_cc) for _ in range(n)],
+        "tesouraria": [escolha(st.session_state.lista_tesouraria) for _ in range(n)],
+        "tipo_doc": [escolha(st.session_state.lista_tipos) for _ in range(n)],
+        "descricao": descricoes,
+        "projeto": "",
+        "prev_s_doc": "N",
+        "suspenso": "N",
         "vencimento": [v.strftime("%d/%m/%Y") for v in vencimentos],
         "pagamento": [p.strftime("%d/%m/%Y") if p else "" for p in pagamentos],
-        "descricao": [
-            random.choice(st.session_state.entradas_codigos if t=="E" else st.session_state.saidas_codigos)
-            for t in tipos
-        ],
+        "dt_inclusao": dt_inclusao,
+        "pend_aprov": "N",
+        "erp_origem": "",
+        "erp_uuid": "",
+        "dt_emissao": dt_emissao,
+        "historico": historicos,
         "cliente_fornecedor": [
-            f"{'C' if t=='E' else 'F'}{random.randint(1,50)}" for t in tipos
+            f"{'C' if t == 'E' else 'F'}{random.randint(1, 50)}" for t in tipos
         ],
-        "tesouraria": [escolha(st.session_state.lista_tesouraria) for _ in range(n)],
-        "centro_custo": [escolha(st.session_state.lista_cc) for _ in range(n)],
-        "tipo_doc": [escolha(st.session_state.lista_tipos) for _ in range(n)]
+        "doc_edit": "N",
     })
+
     return registros
 
 # -------------------------------------------------
