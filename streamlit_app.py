@@ -145,7 +145,7 @@ def gerar_registros_csv(n):
         dt_inclusao.append(inclusao.strftime("%d/%m/%Y"))
 
     # Gera descrições
-    descricoes = [
+    classificacao = [
         random.choice(st.session_state.entradas_codigos if t == "E" else st.session_state.saidas_codigos)
         for t in tipos
     ]
@@ -167,7 +167,7 @@ def gerar_registros_csv(n):
     historicos = []
     for i in range(n):
         tipo = tipos[i]
-        desc = descricoes[i]
+        desc = classificacao[i]
         tipo_doc = escolha(st.session_state.lista_tipos)
         unidade = escolha(st.session_state.lista_unidades)
         if tipo == "E":
@@ -184,7 +184,7 @@ def gerar_registros_csv(n):
         "centro_custo": [escolha(st.session_state.lista_cc) for _ in range(n)],
         "tesouraria": [escolha(st.session_state.lista_tesouraria) for _ in range(n)],
         "tipo_doc": [escolha(st.session_state.lista_tipos) for _ in range(n)],
-        "descricao": descricoes,
+        "classificacao": classificacao,
         "projeto": "",
         "prev_s_doc": "N",
         "suspenso": "N",
