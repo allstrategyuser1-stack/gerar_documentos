@@ -131,33 +131,50 @@ def gerar_registros_csv(n):
     def escolha(lista): 
         return random.choice(lista) if lista else ""
 
-    # Gera dt_inclusao e dt_emissao (10 a 30 dias antes do vencimento)
-    dt_inclusao = []
+    # Gera dt_emissao e dt_inclusao (10 a 30 dias antes do vencimento)
     dt_emissao = []
+    dt_inclusao = []
     for v in vencimentos:
-        dias_antes = random.randint(10, 30)
-        data_base = v - timedelta(days=dias_antes)
-        if data_base < data_inicio:
-            data_base = data_inicio
-        dt_inclusao.append(data_base.strftime("%d/%m/%Y"))
-        dt_emissao.append(data_base.strftime("%d/%m/%Y"))
+        dias_antes_emissao = random.randint(20, 30)
+        dias_antes_inclusao = random.randint(10, 25)
+        emissao = v - timedelta(days=dias_antes_emissao)
+        inclusao = v - timedelta(days=dias_antes_inclusao)
+        emissao = max(emissao, data_inicio)
+        inclusao = max(inclusao, emissao)
+        dt_emissao.append(emissao.strftime("%d/%m/%Y"))
+        dt_inclusao.append(inclusao.strftime("%d/%m/%Y"))
 
-    # Gera descrições e históricos detalhados
+    # Gera descrições
     descricoes = [
         random.choice(st.session_state.entradas_codigos if t == "E" else st.session_state.saidas_codigos)
         for t in tipos
     ]
 
+    # Modelos de frases variadas
+    frases_entrada = [
+        "Recebimento registrado na unidade {unid}, referente ao documento {tipo_doc} código {desc}. Lançamento automático de entrada para controle financeiro.",
+        "Entrada vinculada ao documento {tipo_doc} ({desc}) na unidade {unid}, referente a operação padrão do sistema.",
+        "Documento {tipo_doc} código {desc} processado como recebimento pela unidade {unid}. Controle gerado automaticamente."
+    ]
+
+    frases_saida = [
+        "Pagamento efetuado pela unidade {unid}, referente ao documento {tipo_doc} código {desc}. Lançamento automático de saída para controle contábil.",
+        "Saída vinculada ao documento {tipo_doc} ({desc}) da unidade {unid}, referente a operação de rotina.",
+        "Documento {tipo_doc} código {desc} processado como pagamento pela unidade {unid}. Registro gerado automaticamente."
+    ]
+
+    # Monta históricos personalizados
     historicos = []
     for i in range(n):
         tipo = tipos[i]
         desc = descricoes[i]
         tipo_doc = escolha(st.session_state.lista_tipos)
+        unidade = escolha(st.session_state.lista_unidades)
         if tipo == "E":
-            historico = f"Recebimento referente ao documento {tipo_doc} código {desc}, lançamento automático de entrada."
+            modelo = random.choice(frases_entrada)
         else:
-            historico = f"Pagamento referente ao documento {tipo_doc} código {desc}, lançamento automático de saída."
-        historicos.append(historico)
+            modelo = random.choice(frases_saida)
+        historicos.append(modelo.format(unid=unidade, tipo_doc=tipo_doc, desc=desc))
 
     registros = pd.DataFrame({
         "documento": range(1, n + 1),
@@ -173,11 +190,11 @@ def gerar_registros_csv(n):
         "suspenso": "N",
         "vencimento": [v.strftime("%d/%m/%Y") for v in vencimentos],
         "pagamento": [p.strftime("%d/%m/%Y") if p else "" for p in pagamentos],
+        "dt_emissao": dt_emissao,
         "dt_inclusao": dt_inclusao,
         "pend_aprov": "N",
         "erp_origem": "",
         "erp_uuid": "",
-        "dt_emissao": dt_emissao,
         "historico": historicos,
         "cliente_fornecedor": [
             f"{'C' if t == 'E' else 'F'}{random.randint(1, 50)}" for t in tipos
