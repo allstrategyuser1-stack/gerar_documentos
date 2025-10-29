@@ -244,7 +244,7 @@ with st.expander("ℹ️ Observações da função", expanded=False):
 # -------------------------------------------------
 # 🧭 FLUXO PRINCIPAL (WIZARD)
 # -------------------------------------------------
-step = st.session_state.step
+step = max(0, min(st.session_state.step, 6))
 st.progress((step + 1) / 7)
 
 # Passos do fluxo
