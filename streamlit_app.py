@@ -303,13 +303,18 @@ elif step == 6:
     st.markdown("### 💾 Gerar CSV com dados")
     num_registros = st.number_input("Número de registros", min_value=10, max_value=10000, value=100)
 
+    # --- Botões de navegação (somente voltar aqui) ---
+    col1, _ = st.columns([1, 1])
+    with col1:
+        st.button("⬅ Voltar", on_click=voltar_step, key="voltar_final")
+
+    # --- Geração de registros ---
     if st.button("Gerar Registros"):
         df = gerar_registros_csv(num_registros)
         st.session_state.registros_gerados = df
         st.session_state.csv_gerado = True
 
-    botoes_step(preenchido=True, label_proximo="⬅ Voltar")
-
+    # --- Exibição dos resultados ---
     if st.session_state.csv_gerado:
         df = st.session_state.registros_gerados.copy()
 
@@ -342,7 +347,7 @@ elif step == 6:
         col1, col2 = st.columns(2)
         with col1:
             st.metric("Entradas", entradas.shape[0])
-            st.metric("Valor total Entradas", formatar_brl(entradas["valor_num"].sum()))
+            st.metric("Valor total Entradas", formatar_brl(entradas["valor"].sum()))
         with col2:
             st.metric("Saídas", saidas.shape[0])
-            st.metric("Valor total Saídas", formatar_brl(saidas["valor_num"].sum()))
+            st.metric("Valor total Saídas", formatar_brl(saidas["valor"].sum()))
