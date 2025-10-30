@@ -145,11 +145,14 @@ def gerar_registros_csv(n):
         min_venc = inclusao + timedelta(days=random.randint(5, 20))
         max_venc = data_fim
         vencimento = min(max(min_venc, inclusao), max_venc)
-        # Pagamento igual ou posterior ao vencimento, podendo ser None
         if random.random() < 0.5:
-            pagamento = vencimento + timedelta(days=random.randint(0, 10))
-            if pagamento > data_fim:
-                pagamento = data_fim
+            # Pagamento pode ocorrer até 5 dias antes ou 10 dias depois do vencimento
+                pagamento = vencimento + timedelta(days=random.randint(-5, 10))
+            # Garante que nunca saia do período global
+                if pagamento < data_inicio:
+                    pagamento = data_inicio
+                if pagamento > data_fim:
+                    pagamento = data_fim
         else:
             pagamento = None
 
