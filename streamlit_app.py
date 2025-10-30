@@ -278,26 +278,26 @@ if step == 0:
         )
 
 elif step == 1:
-    preenchido = atualizar_lista("Unidades", st.session_state.lista_unidades, "unidades", "unidades")
-    botoes_step(preenchido, "Próximo: Classificações ➡")
+    atualizar_lista("Unidades", st.session_state.lista_unidades, "unidades", "unidades")
+    botoes_step(True, "Próximo: Classificações ➡")
 
 elif step == 2:
     st.markdown("<h2>Classificações financeiras</h2>", unsafe_allow_html=True)
-    entradas_ok = atualizar_lista("Entradas", st.session_state.entradas_codigos, "entrada", "entradas")
-    saidas_ok = atualizar_lista("Saídas", st.session_state.saidas_codigos, "saida", "saidas")
-    botoes_step(entradas_ok and saidas_ok, "Próximo: Tesouraria ➡")
+    atualizar_lista("Entradas", st.session_state.entradas_codigos, "entrada", "entradas")
+    atualizar_lista("Saídas", st.session_state.saidas_codigos, "saida", "saidas")
+    botoes_step(True, "Próximo: Tesouraria ➡")
 
 elif step == 3:
-    preenchido = atualizar_lista("Tesouraria", st.session_state.lista_tesouraria, "tesouraria", "tesouraria")
-    botoes_step(preenchido, "Próximo: Centro de Custo ➡")
+    atualizar_lista("Tesouraria", st.session_state.lista_tesouraria, "tesouraria", "tesouraria")
+    botoes_step(True, "Próximo: Centro de Custo ➡")
 
 elif step == 4:
-    preenchido = atualizar_lista("Centro de Custo", st.session_state.lista_cc, "centro_custo", "cc")
-    botoes_step(preenchido, "Próximo: Tipos de Documento ➡")
+    atualizar_lista("Centro de Custo", st.session_state.lista_cc, "centro_custo", "cc")
+    botoes_step(True, "Próximo: Tipos de Documento ➡")
 
 elif step == 5:
-    preenchido = atualizar_lista("Tipos de Documento", st.session_state.lista_tipos, "tipos_doc", "tipos_doc")
-    botoes_step(preenchido, "Próximo: Gerar CSV ➡")
+    atualizar_lista("Tipos de Documento", st.session_state.lista_tipos, "tipos_doc", "tipos_doc")
+    botoes_step(True, "Próximo: Gerar CSV ➡")
 
 elif step == 6:
     st.markdown("### 💾 Gerar CSV com dados")
